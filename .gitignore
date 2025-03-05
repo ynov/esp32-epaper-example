@@ -1,0 +1,7 @@
+.pio
+.vscode
+
+.DS_Store
+*.zip
+*.tgz
+private.h
