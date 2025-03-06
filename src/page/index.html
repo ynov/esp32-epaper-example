@@ -22,7 +22,17 @@
         gap: 4px;
       }
 
-      .buttons button {
+      .editor {
+        margin-top: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      input {
+        padding: 12px;
+      }
+      button {
         padding: 12px;
       }
     </style>
@@ -30,18 +40,28 @@
 
   <body>
     <div class="buttons">
-      <br />
       <div>
         <button onclick="toggleScreenColor()">Toggle Screen Color</button>
       </div>
-      <br />
       <div>
         <button onclick="clearScreen()">Clear Screen</button>
       </div>
-      <br />
       <div>
         <button onclick="dummyScreen()">Dummy Screen</button>
       </div>
+    </div>
+    <div class="editor">
+      <input
+        type="text"
+        id="text"
+        onkeypress="if (event.key === 'Enter') { drawText(); }"
+        placeholder="Enter text"
+      />
+      <div class="position">
+        <input type="number" id="x" placeholder="X" value="20" /> (X)
+        <input type="number" id="y" placeholder="Y" value="20" /> (Y)
+      </div>
+      <button onclick="drawText()">Draw Text</button>
     </div>
   </body>
 
@@ -56,6 +76,23 @@
 
     function dummyScreen() {
       fetch("/dummy_screen");
+    }
+
+    function drawText() {
+      if (document.getElementById("text").value.length === 0) {
+        return;
+      }
+
+      fetch("/draw_text", {
+        method: "POST",
+        body: JSON.stringify({
+          text: document.getElementById("text").value,
+          x: parseInt(document.getElementById("x").value, 10),
+          y: parseInt(document.getElementById("y").value, 10),
+        }),
+      }).finally(() => {
+        document.getElementById("text").value = "";
+      });
     }
   </script>
 </html>

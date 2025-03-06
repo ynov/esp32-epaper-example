@@ -12,6 +12,7 @@
 #include "button.h"
 #include "epaper.h"
 #include "font.h"
+#include "http.h"
 
 static const char* TAG = "epaper.c";
 
@@ -391,9 +392,13 @@ void epaper_dummy_screen()
         epaper_write_data(0x00);
     }
 
-    epaper_update();
+    if (screen_color == SCREEN_BLACK) {
+        epaper_black_screen();
+    } else {
+        epaper_white_screen();
+    }
 
-    screen_color = SCREEN_WHITE;
+    epaper_update();
 }
 
 void epaper_clear_screen()
@@ -468,6 +473,20 @@ static void epaper_button3_press_cb()
     epaper_deep_sleep();
 }
 
+static void epaper_draw_text_cb(const char* text, int x, int y)
+{
+    epaper_draw_text(x, y, text, &font_jetbrains_mono_16x24);
+
+    if (screen_color == SCREEN_BLACK) {
+        epaper_black_screen();
+    } else {
+        epaper_white_screen();
+    }
+
+    epaper_update();
+    epaper_deep_sleep();
+}
+
 void epaper_setup()
 {
     epaper_init_fast();
@@ -475,4 +494,6 @@ void epaper_setup()
     button_register_button1_press_cb(epaper_button1_press_cb);
     button_register_button2_press_cb(epaper_button2_press_cb);
     button_register_button3_press_cb(epaper_button3_press_cb);
+
+    http_register_on_draw_text(epaper_draw_text_cb);
 }
