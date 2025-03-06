@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ESP32 ePaper</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        font-family: "Ubuntu Mono", "JetBrains Mono", monospace;
+      }
+
+      body {
+        padding: 12px;
+      }
+
+      .buttons {
+        display: flex;
+        flex-direction: row;
+        gap: 4px;
+      }
+
+      .buttons button {
+        padding: 12px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="buttons">
+      <br />
+      <div>
+        <button onclick="toggleScreenColor()">Toggle Screen Color</button>
+      </div>
+      <br />
+      <div>
+        <button onclick="clearScreen()">Clear Screen</button>
+      </div>
+      <br />
+      <div>
+        <button onclick="dummyScreen()">Dummy Screen</button>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    function toggleScreenColor() {
+      fetch("/toggle_screen_color");
+    }
+
+    function clearScreen() {
+      fetch("/clear_screen");
+    }
+
+    function dummyScreen() {
+      fetch("/dummy_screen");
+    }
+  </script>
+</html>
