@@ -382,16 +382,6 @@ void epaper_dummy_screen()
         }
     }
 
-    epaper_write_command(0x10);
-    for (uint32_t i = 0; i < DISPLAY_BUFFER_SIZE; i++) {
-        epaper_write_data(epaper_buffer[i]);
-    }
-
-    epaper_write_command(0x13);
-    for (uint32_t i = 0; i < DISPLAY_BUFFER_SIZE; i++) {
-        epaper_write_data(0x00);
-    }
-
     if (screen_color == SCREEN_BLACK) {
         epaper_black_screen();
     } else {

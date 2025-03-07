@@ -7,6 +7,8 @@
 #include "page/index.html.h"
 #include "font.h"
 
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+
 static const char* TAG = "http.c";
 
 static void (*on_draw_text)(const char* text, int x, int y);
@@ -72,25 +74,22 @@ static esp_err_t dummy_screen_http_handler(httpd_req_t* req)
  */
 static esp_err_t draw_text_http_handler(httpd_req_t* req)
 {
+    static char content[4096];
+
+    memset(content, 0, sizeof(content));
+
     int content_length = req->content_len;
     if (content_length <= 0) {
         return ESP_FAIL;
     }
 
-    char* content = malloc(content_length + 1);
-    if (!content) {
-        return ESP_FAIL;
-    }
-
-    int received = httpd_req_recv(req, content, content_length);
+    int received = httpd_req_recv(req, content, MAX(content_length, sizeof(content)));
     if (received != content_length) {
-        free(content);
         return ESP_FAIL;
     }
     content[content_length] = '\0';
 
     cJSON* root = cJSON_Parse(content);
-    free(content);
 
     if (!root) {
         return ESP_FAIL;
